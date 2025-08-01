@@ -26,7 +26,7 @@ app.use(
 const APP_SECRET = process.env.APP_SECRET;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const PASSPHRASE = process.env.PASSPHRASE;
-const PORT = "3001";
+const PORT = "3000";
 
 /*
 Example:
