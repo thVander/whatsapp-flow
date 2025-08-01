@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "start": "NODE_OPTIONS=--openssl-legacy-provider node src/server.js"
+    "start": "node src/server.js"
   },
   "author": "WhatsApp Flows Team",
   "license": "MIT",
