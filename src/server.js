@@ -53,9 +53,7 @@ app.post("/", async (req, res) => {
   }
 
   let decryptedRequest = null;
-  try {
-    console.log("body:"+req.body);
-     console.log("PRIVATE_KEY:"+PRIVATE_KEY);
+  try {    
     decryptedRequest = decryptRequest(req.body, PRIVATE_KEY);
   } catch (err) {
     console.error(err);
