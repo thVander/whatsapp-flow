@@ -89,9 +89,8 @@ app.post("/", async (req, res) => {
 
 app.get("/", (req, res) => {
    
-  console.log("APP_SECRET" + process.env.PRIVATE_KEY);
   res.send(`<pre>Nothing to see here.
-Checkout README.md to start.</pre> teste`+ process.env.PRIVATE_KEY);
+Checkout README.md to start.</pre>`); 
 });
 
 app.listen(PORT, () => {
