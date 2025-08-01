@@ -5,11 +5,12 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "start": "node --env-file=.env src/server.js"
+    "start": "node src/server.js"
   },
   "author": "WhatsApp Flows Team",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^17.2.1",
     "express": "^4.21.2"
   },
   "engines": {

@@ -10,6 +10,9 @@ import { decryptRequest, encryptResponse, FlowEndpointException } from "./encryp
 import { getNextScreen } from "./flow.js";
 import crypto from "crypto";
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 const app = express();
 
 app.use(
@@ -26,7 +29,7 @@ app.use(
 const APP_SECRET = process.env.APP_SECRET;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const PASSPHRASE = process.env.PASSPHRASE;
-const PORT = "3000";
+const PORT =  process.env.PORT;
 
 /*
 Example:
