@@ -55,6 +55,9 @@ app.post("/", async (req, res) => {
 
   let decryptedRequest = null;
   try {
+    console.log("body:"+req.body);
+     console.log("PRIVATE_KEY:"+PRIVATE_KEY);
+     console.log("PASSPHRASE:"+PASSPHRASE);
     decryptedRequest = decryptRequest(req.body, PRIVATE_KEY, PASSPHRASE);
   } catch (err) {
     console.error(err);
@@ -93,7 +96,7 @@ app.post("/", async (req, res) => {
 app.get("/", (req, res) => {
    
   res.send(`<pre>Nothing to see here.
-Checkout README.md to start.</pre>`); 
+Checkout README.md to start.</pre>` + process.env.PASSPHRASE); 
 });
 
 app.listen(PORT, () => {
