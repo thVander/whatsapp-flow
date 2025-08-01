@@ -66,3 +66,11 @@ export const decryptRequest = (body, privatePem) => {
     initialVectorBuffer,
   };
 };
+export const FlowEndpointException = class FlowEndpointException extends Error {
+  constructor (statusCode, message) {
+    super(message)
+
+    this.name = this.constructor.name
+    this.statusCode = statusCode;
+  }
+}
