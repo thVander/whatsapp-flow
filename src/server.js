@@ -9,8 +9,6 @@ import express from "express";
 import { decryptRequest, encryptResponse, FlowEndpointException } from "./encryption.js";
 import { getNextScreen } from "./flow.js";
 import crypto from "crypto";
-import dotenv from 'dotenv';
-dotenv.config();
 
 const app = express();
 
@@ -24,15 +22,11 @@ app.use(
 );
 
 
-const { 
-  APP_SECRET, 
-  PRIVATE_KEY, 
-  PASSPHRASE, 
-  PORT = "3000" } = process.env;
 
-APP_SECRET = process.env.APP_SECRET;
-PRIVATE_KEY = process.env.PRIVATE_KEY;
-PASSPHRASE = process.env.PASSPHRASE;
+const APP_SECRET = process.env.APP_SECRET;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const PASSPHRASE = process.env.PASSPHRASE;
+const PORT = "3001";
 
 /*
 Example:
@@ -94,12 +88,14 @@ app.post("/", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
+   
+  console.log("APP_SECRET" + process.env.PRIVATE_KEY);
   res.send(`<pre>Nothing to see here.
-Checkout README.md to start.</pre>`);
+Checkout README.md to start.</pre> teste`+ process.env.PRIVATE_KEY);
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is listening on port: ${PORT}`);
+  //console.log(`Server is listening on port: ${PORT}`);
 });
 
 function isRequestSignatureValid(req) {

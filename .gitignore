@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+
+# Variáveis de ambiente
+.env
+
+# Logs
+logs/
+*.log
+
+# Arquivos temporários
+*.tmp
+*.swp
+
+# Build
+dist/
+build/
+
+# Mac e VSCode
+.DS_Store
+.vscode/
+
+# Test coverage
+coverage/
