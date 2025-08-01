@@ -10,11 +10,10 @@ import crypto from "crypto";
 export const decryptRequest = (body, privatePem) => {
   const { encrypted_aes_key, encrypted_flow_data, initial_vector } = body;
 
-  // Cria a chave privada diretamente, sem passphrase
   const privateKey = crypto.createPrivateKey({
     key: privatePem,
     format: "pem",
-    type: "pkcs1", // importante garantir o tipo correto
+    type: "pkcs1", // garante compatibilidade com chave RSA sem criptografia
   });
 
   let decryptedAesKey = null;
@@ -66,11 +65,35 @@ export const decryptRequest = (body, privatePem) => {
     initialVectorBuffer,
   };
 };
-export const FlowEndpointException = class FlowEndpointException extends Error {
-  constructor (statusCode, message) {
-    super(message)
 
-    this.name = this.constructor.name
+export const encryptResponse = (
+  response,
+  aesKeyBuffer,
+  initialVectorBuffer
+) => {
+  // flip initial vector
+  const flipped_iv = [];
+  for (const pair of initialVectorBuffer.entries()) {
+    flipped_iv.push(~pair[1]);
+  }
+
+  // encrypt response data
+  const cipher = crypto.createCipheriv(
+    "aes-128-gcm",
+    aesKeyBuffer,
+    Buffer.from(flipped_iv)
+  );
+  return Buffer.concat([
+    cipher.update(JSON.stringify(response), "utf-8"),
+    cipher.final(),
+    cipher.getAuthTag(),
+  ]).toString("base64");
+};
+
+export class FlowEndpointException extends Error {
+  constructor(statusCode, message) {
+    super(message);
+    this.name = this.constructor.name;
     this.statusCode = statusCode;
   }
 }
