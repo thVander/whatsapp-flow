@@ -28,7 +28,6 @@ app.use(
 
 const APP_SECRET = process.env.APP_SECRET;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
-const PASSPHRASE = process.env.PASSPHRASE;
 const PORT =  process.env.PORT;
 
 /*
@@ -57,8 +56,7 @@ app.post("/", async (req, res) => {
   try {
     console.log("body:"+req.body);
      console.log("PRIVATE_KEY:"+PRIVATE_KEY);
-     console.log("PASSPHRASE:"+PASSPHRASE);
-    decryptedRequest = decryptRequest(req.body, PRIVATE_KEY, PASSPHRASE);
+    decryptedRequest = decryptRequest(req.body, PRIVATE_KEY);
   } catch (err) {
     console.error(err);
     if (err instanceof FlowEndpointException) {
@@ -96,7 +94,7 @@ app.post("/", async (req, res) => {
 app.get("/", (req, res) => {
    
   res.send(`<pre>Nothing to see here.
-Checkout README.md to start.</pre>` + process.env.PASSPHRASE); 
+Checkout README.md to start.</pre>`); 
 });
 
 app.listen(PORT, () => {
