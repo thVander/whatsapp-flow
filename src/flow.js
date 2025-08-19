@@ -35,19 +35,19 @@ const SCREEN_RESPONSES = {
       location: [
         {
           id: "1",
-          title: "King\u2019s Cross, London",
+          title: "teste1",
         },
         {
           id: "2",
-          title: "Oxford Street, London",
+          title: "Teste 2",
         },
         {
           id: "3",
-          title: "Covent Garden, London",
+          title: "CTeste 3",
         },
         {
           id: "4",
-          title: "Piccadilly Circus, London",
+          title: "Teste 4",
         },
       ],
       is_location_enabled: true,
