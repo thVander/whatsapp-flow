@@ -10,7 +10,7 @@ const SCREEN_RESPONSES = {
   APPOINTMENT: {
     screen: "APPOINTMENT",
     data: {
-      classificacao: [
+      department: [
         {
           id: "01",
           title: "Teste 1",
@@ -32,7 +32,7 @@ const SCREEN_RESPONSES = {
           title: "teste 5",
         },
       ],
-      centro_de_custos: [
+      location: [
         {
           id: "1",
           title: "teste1",
@@ -50,18 +50,67 @@ const SCREEN_RESPONSES = {
           title: "Teste 4",
         },
       ],
-      is_centro_de_custos_enabled: true,   
+      is_location_enabled: true,
+      date: [
+        {
+          id: "2024-01-01",
+          title: "Mon Jan 01 2024",
+        },
+        {
+          id: "2024-01-02",
+          title: "Tue Jan 02 2024",
+        },
+        {
+          id: "2024-01-03",
+          title: "Wed Jan 03 2024",
+        },
+      ],
+      is_date_enabled: true,
+      time: [
+        {
+          id: "10:30",
+          title: "10:30",
+        },
+        {
+          id: "11:00",
+          title: "11:00",
+          enabled: false,
+        },
+        {
+          id: "11:30",
+          title: "11:30",
+        },
+        {
+          id: "12:00",
+          title: "12:00",
+          enabled: false,
+        },
+        {
+          id: "12:30",
+          title: "12:30",
+        },
+      ],
+      is_time_enabled: true,
+    },
+  },
+  DETAILS: {
+    screen: "DETAILS",
+    data: {
+      department: "beauty",
+      location: "1",
+      date: "2024-01-01",
+      time: "11:30",
     },
   },
   SUMMARY: {
     screen: "SUMMARY",
     data: {
       appointment:
-        "Beauty & Personal Care classificacao at Kings Cross, London\nMon Jan 01 2024 at 11:30.",
+        "Beauty & Personal Care Department at Kings Cross, London\nMon Jan 01 2024 at 11:30.",
       details:
         "Name: John Doe\nEmail: john@example.com\nPhone: 123456789\n\nA free skin care consultation, please",
-      classificacao: "beauty",
-      centro_de_custos: "1",
+      department: "beauty",
+      location: "1",
       date: "2024-01-01",
       time: "11:30",
       name: "John Doe",
@@ -69,6 +118,10 @@ const SCREEN_RESPONSES = {
       phone: "123456789",
       more_details: "A free skin care consultation, please",
     },
+  },
+  TERMS: {
+    screen: "TERMS",
+    data: {},
   },
   SUCCESS: {
     screen: "SUCCESS",
@@ -106,13 +159,12 @@ export const getNextScreen = async (decryptedBody) => {
 
   // handle initial request when opening the flow and display APPOINTMENT screen
   if (action === "INIT") {
-    console.log('versao: 1.1')
     return {
       ...SCREEN_RESPONSES.APPOINTMENT,
       data: {
         ...SCREEN_RESPONSES.APPOINTMENT.data,
         // these fields are disabled initially. Each field is enabled when previous fields are selected
-        is_centro_de_custos_enabled: false,
+        is_location_enabled: false,
         is_date_enabled: false,
         is_time_enabled: false,
       },
@@ -131,17 +183,49 @@ export const getNextScreen = async (decryptedBody) => {
             // copy initial screen data then override specific fields
             ...SCREEN_RESPONSES.APPOINTMENT.data,
             // each field is enabled only when previous fields are selected
-            is_centro_de_custos_enabled: Boolean(data.classificacao),
-            is_date_enabled: Boolean(data.classificacao) && Boolean(data.centro_de_custos),
+            is_location_enabled: Boolean(data.department),
+            is_date_enabled: Boolean(data.department) && Boolean(data.location),
             is_time_enabled:
-              Boolean(data.classificacao) &&
-              Boolean(data.centro_de_custos) &&
+              Boolean(data.department) &&
+              Boolean(data.location) &&
               Boolean(data.date),
 
             //TODO: filter each field options based on current selection, here we filter randomly instead
-            centro_de_custos: SCREEN_RESPONSES.APPOINTMENT.data.centro_de_custos.slice(0, 3),
+            location: SCREEN_RESPONSES.APPOINTMENT.data.location.slice(0, 3),
             date: SCREEN_RESPONSES.APPOINTMENT.data.date.slice(0, 3),
             time: SCREEN_RESPONSES.APPOINTMENT.data.time.slice(0, 3),
+          },
+        };
+
+      // handles when user completes DETAILS screen
+      case "DETAILS":
+        // the client payload contains selected ids from dropdown lists, we need to map them to names to display to user
+        const departmentName =
+          SCREEN_RESPONSES.APPOINTMENT.data.department.find(
+            (dept) => dept.id === data.department
+          ).title;
+        const locationName = SCREEN_RESPONSES.APPOINTMENT.data.location.find(
+          (loc) => loc.id === data.location
+        ).title;
+        const dateName = SCREEN_RESPONSES.APPOINTMENT.data.date.find(
+          (date) => date.id === data.date
+        ).title;
+
+        const appointment = `${departmentName} at ${locationName}
+${dateName} at ${data.time}`;
+
+        const details = `Name: ${data.name}
+Email: ${data.email}
+Phone: ${data.phone}
+"${data.more_details}"`;
+
+        return {
+          ...SCREEN_RESPONSES.SUMMARY,
+          data: {
+            appointment,
+            details,
+            // return the same fields sent from client back to submit in the next step
+            ...data,
           },
         };
 
@@ -149,12 +233,13 @@ export const getNextScreen = async (decryptedBody) => {
       case "SUMMARY":
         // TODO: save appointment to your database
         // send success response to complete and close the flow
+        console.log(data)
         return {
           ...SCREEN_RESPONSES.SUCCESS,
           data: {
             extension_message_response: {
               params: {
-                flow_token,
+                flow_token
               },
             },
           },
