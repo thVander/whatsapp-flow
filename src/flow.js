@@ -51,46 +51,10 @@ const SCREEN_RESPONSES = {
         },
       ],
       is_location_enabled: true,
-      date: [
-        {
-          id: "2024-01-01",
-          title: "Mon Jan 01 2024",
-        },
-        {
-          id: "2024-01-02",
-          title: "Tue Jan 02 2024",
-        },
-        {
-          id: "2024-01-03",
-          title: "Wed Jan 03 2024",
-        },
-      ],
-      is_date_enabled: true,
-      time: [
-        {
-          id: "10:30",
-          title: "10:30",
-        },
-        {
-          id: "11:00",
-          title: "11:00",
-          enabled: false,
-        },
-        {
-          id: "11:30",
-          title: "11:30",
-        },
-        {
-          id: "12:00",
-          title: "12:00",
-          enabled: false,
-        },
-        {
-          id: "12:30",
-          title: "12:30",
-        },
-      ],
-      is_time_enabled: true,
+      name: "John Doe",
+      name: "John Doe",
+      name: "John Doe",
+      name: "John Doe"
     },
   },
   SUMMARY: {
