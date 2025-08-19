@@ -10,7 +10,7 @@ const SCREEN_RESPONSES = {
   APPOINTMENT: {
     screen: "APPOINTMENT",
     data: {
-      classificacao: [
+      department: [
         {
           id: "01",
           title: "Teste 1",
@@ -96,7 +96,7 @@ const SCREEN_RESPONSES = {
   DETAILS: {
     screen: "DETAILS",
     data: {
-      classificacao: "beauty",
+      department: "beauty",
       location: "1",
       date: "2024-01-01",
       time: "11:30",
@@ -106,10 +106,10 @@ const SCREEN_RESPONSES = {
     screen: "SUMMARY",
     data: {
       appointment:
-        "Beauty & Personal Care classificacao at Kings Cross, London\nMon Jan 01 2024 at 11:30.",
+        "Beauty & Personal Care Department at Kings Cross, London\nMon Jan 01 2024 at 11:30.",
       details:
         "Name: John Doe\nEmail: john@example.com\nPhone: 123456789\n\nA free skin care consultation, please",
-      classificacao: "beauty",
+      department: "beauty",
       location: "1",
       date: "2024-01-01",
       time: "11:30",
@@ -183,10 +183,10 @@ export const getNextScreen = async (decryptedBody) => {
             // copy initial screen data then override specific fields
             ...SCREEN_RESPONSES.APPOINTMENT.data,
             // each field is enabled only when previous fields are selected
-            is_location_enabled: Boolean(data.classificacao),
-            is_date_enabled: Boolean(data.classificacao) && Boolean(data.location),
+            is_location_enabled: Boolean(data.department),
+            is_date_enabled: Boolean(data.department) && Boolean(data.location),
             is_time_enabled:
-              Boolean(data.classificacao) &&
+              Boolean(data.department) &&
               Boolean(data.location) &&
               Boolean(data.date),
 
@@ -200,9 +200,9 @@ export const getNextScreen = async (decryptedBody) => {
       // handles when user completes DETAILS screen
       case "DETAILS":
         // the client payload contains selected ids from dropdown lists, we need to map them to names to display to user
-        const classificacaoName =
-          SCREEN_RESPONSES.APPOINTMENT.data.classificacao.find(
-            (dept) => dept.id === data.classificacao
+        const departmentName =
+          SCREEN_RESPONSES.APPOINTMENT.data.department.find(
+            (dept) => dept.id === data.department
           ).title;
         const locationName = SCREEN_RESPONSES.APPOINTMENT.data.location.find(
           (loc) => loc.id === data.location
@@ -211,7 +211,7 @@ export const getNextScreen = async (decryptedBody) => {
           (date) => date.id === data.date
         ).title;
 
-        const appointment = `${classificacaoName} at ${locationName}
+        const appointment = `${departmentName} at ${locationName}
 ${dateName} at ${data.time}`;
 
         const details = `Name: ${data.name}
