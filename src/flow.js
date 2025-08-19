@@ -233,6 +233,7 @@ Phone: ${data.phone}
       case "SUMMARY":
         // TODO: save appointment to your database
         // send success response to complete and close the flow
+        console.log(data)
         return {
           ...SCREEN_RESPONSES.SUCCESS,
           data: {
