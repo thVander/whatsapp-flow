@@ -93,15 +93,6 @@ const SCREEN_RESPONSES = {
       is_time_enabled: true,
     },
   },
-  DETAILS: {
-    screen: "DETAILS",
-    data: {
-      department: "beauty",
-      location: "1",
-      date: "2024-01-01",
-      time: "11:30",
-    },
-  },
   SUMMARY: {
     screen: "SUMMARY",
     data: {
@@ -118,10 +109,6 @@ const SCREEN_RESPONSES = {
       phone: "123456789",
       more_details: "A free skin care consultation, please",
     },
-  },
-  TERMS: {
-    screen: "TERMS",
-    data: {},
   },
   SUCCESS: {
     screen: "SUCCESS",
@@ -194,38 +181,6 @@ export const getNextScreen = async (decryptedBody) => {
             location: SCREEN_RESPONSES.APPOINTMENT.data.location.slice(0, 3),
             date: SCREEN_RESPONSES.APPOINTMENT.data.date.slice(0, 3),
             time: SCREEN_RESPONSES.APPOINTMENT.data.time.slice(0, 3),
-          },
-        };
-
-      // handles when user completes DETAILS screen
-      case "DETAILS":
-        // the client payload contains selected ids from dropdown lists, we need to map them to names to display to user
-        const departmentName =
-          SCREEN_RESPONSES.APPOINTMENT.data.department.find(
-            (dept) => dept.id === data.department
-          ).title;
-        const locationName = SCREEN_RESPONSES.APPOINTMENT.data.location.find(
-          (loc) => loc.id === data.location
-        ).title;
-        const dateName = SCREEN_RESPONSES.APPOINTMENT.data.date.find(
-          (date) => date.id === data.date
-        ).title;
-
-        const appointment = `${departmentName} at ${locationName}
-${dateName} at ${data.time}`;
-
-        const details = `Name: ${data.name}
-Email: ${data.email}
-Phone: ${data.phone}
-"${data.more_details}"`;
-
-        return {
-          ...SCREEN_RESPONSES.SUMMARY,
-          data: {
-            appointment,
-            details,
-            // return the same fields sent from client back to submit in the next step
-            ...data,
           },
         };
 
