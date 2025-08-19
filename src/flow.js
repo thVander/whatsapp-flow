@@ -5,249 +5,126 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// this object is generated from Flow Builder under "..." > Endpoint > Snippets > Responses
+// Respostas somente para a tela APPOINTMENT + SUCCESS
 const SCREEN_RESPONSES = {
   APPOINTMENT: {
     screen: "APPOINTMENT",
     data: {
       department: [
-        {
-          id: "01",
-          title: "Teste 1",
-        },
-        {
-          id: "02",
-          title: "teste 2",
-        },
-        {
-          id: "03",
-          title: "teste 3",
-        },
-        {
-          id: "04",
-          title: "teste 4",
-        },
-        {
-          id: "05",
-          title: "teste 5",
-        },
+        { id: "01", title: "Teste 1" },
+        { id: "02", title: "teste 2" },
+        { id: "03", title: "teste 3" },
+        { id: "04", title: "teste 4" },
+        { id: "05", title: "teste 5" }
       ],
       location: [
-        {
-          id: "1",
-          title: "teste1",
-        },
-        {
-          id: "2",
-          title: "Teste 2",
-        },
-        {
-          id: "3",
-          title: "CTeste 3",
-        },
-        {
-          id: "4",
-          title: "Teste 4",
-        },
+        { id: "1", title: "teste1" },
+        { id: "2", title: "Teste 2" },
+        { id: "3", title: "CTeste 3" },
+        { id: "4", title: "Teste 4" }
       ],
-      is_location_enabled: true,
+      is_location_enabled: true,  // será sobrescrito no INIT
       date: [
-        {
-          id: "2024-01-01",
-          title: "Mon Jan 01 2024",
-        },
-        {
-          id: "2024-01-02",
-          title: "Tue Jan 02 2024",
-        },
-        {
-          id: "2024-01-03",
-          title: "Wed Jan 03 2024",
-        },
+        { id: "2024-01-01", title: "Mon Jan 01 2024" },
+        { id: "2024-01-02", title: "Tue Jan 02 2024" },
+        { id: "2024-01-03", title: "Wed Jan 03 2024" }
       ],
-      is_date_enabled: true,
+      is_date_enabled: true,      // será sobrescrito no INIT
       time: [
-        {
-          id: "10:30",
-          title: "10:30",
-        },
-        {
-          id: "11:00",
-          title: "11:00",
-          enabled: false,
-        },
-        {
-          id: "11:30",
-          title: "11:30",
-        },
-        {
-          id: "12:00",
-          title: "12:00",
-          enabled: false,
-        },
-        {
-          id: "12:30",
-          title: "12:30",
-        },
+        { id: "10:30", title: "10:30" },
+        { id: "11:00", title: "11:00", enabled: false },
+        { id: "11:30", title: "11:30" },
+        { id: "12:00", title: "12:00", enabled: false },
+        { id: "12:30", title: "12:30" }
       ],
-      is_time_enabled: true,
-    },
-  },
-  DETAILS: {
-    screen: "DETAILS",
-    data: {
-      department: "beauty",
-      location: "1",
-      date: "2024-01-01",
-      time: "11:30",
-    },
-  },
-  SUMMARY: {
-    screen: "SUMMARY",
-    data: {
-      appointment:
-        "Beauty & Personal Care Department at Kings Cross, London\nMon Jan 01 2024 at 11:30.",
-      details:
-        "Name: John Doe\nEmail: john@example.com\nPhone: 123456789\n\nA free skin care consultation, please",
-      department: "beauty",
-      location: "1",
-      date: "2024-01-01",
-      time: "11:30",
-      name: "John Doe",
-      email: "john@example.com",
-      phone: "123456789",
-      more_details: "A free skin care consultation, please",
-    },
-  },
-  TERMS: {
-    screen: "TERMS",
-    data: {},
+      is_time_enabled: true       // será sobrescrito no INIT
+    }
   },
   SUCCESS: {
     screen: "SUCCESS",
     data: {
       extension_message_response: {
         params: {
-          flow_token: "REPLACE_FLOW_TOKEN",
-          some_param_name: "PASS_CUSTOM_VALUE",
-        },
-      },
-    },
-  },
+          flow_token: "REPLACE_FLOW_TOKEN"
+        }
+      }
+    }
+  }
 };
 
 export const getNextScreen = async (decryptedBody) => {
-  const { screen, data, version, action, flow_token } = decryptedBody;
-  // handle health check request
+  const { screen, data, action, flow_token } = decryptedBody;
+
+  // health check
   if (action === "ping") {
-    return {
-      data: {
-        status: "active",
-      },
-    };
+    return { data: { status: "active" } };
   }
 
-  // handle error notification
+  // notificação de erro do cliente
   if (data?.error) {
     console.warn("Received client error:", data);
-    return {
-      data: {
-        acknowledged: true,
-      },
-    };
+    return { data: { acknowledged: true } };
   }
 
-  // handle initial request when opening the flow and display APPOINTMENT screen
+  // abertura do flow: mostra APPOINTMENT com campos bloqueados até seleção
   if (action === "INIT") {
     return {
       ...SCREEN_RESPONSES.APPOINTMENT,
       data: {
         ...SCREEN_RESPONSES.APPOINTMENT.data,
-        // these fields are disabled initially. Each field is enabled when previous fields are selected
         is_location_enabled: false,
         is_date_enabled: false,
-        is_time_enabled: false,
-      },
+        is_time_enabled: false
+      }
     };
   }
 
-  if (action === "data_exchange") {
-    // handle the request based on the current screen
-    switch (screen) {
-      // handles when user interacts with APPOINTMENT screen
-      case "APPOINTMENT":
-        // update the appointment fields based on current user selection
-        return {
-          ...SCREEN_RESPONSES.APPOINTMENT,
-          data: {
-            // copy initial screen data then override specific fields
-            ...SCREEN_RESPONSES.APPOINTMENT.data,
-            // each field is enabled only when previous fields are selected
-            is_location_enabled: Boolean(data.department),
-            is_date_enabled: Boolean(data.department) && Boolean(data.location),
-            is_time_enabled:
-              Boolean(data.department) &&
-              Boolean(data.location) &&
-              Boolean(data.date),
+  // único fluxo de interação: APPOINTMENT
+  if (action === "data_exchange" && screen === "APPOINTMENT") {
+    const hasDept = Boolean(data.department);
+    const hasLoc  = Boolean(data.location);
+    const hasDate = Boolean(data.date);
+    const hasTime = Boolean(data.time);
 
-            //TODO: filter each field options based on current selection, here we filter randomly instead
-            location: SCREEN_RESPONSES.APPOINTMENT.data.location.slice(0, 3),
-            date: SCREEN_RESPONSES.APPOINTMENT.data.date.slice(0, 3),
-            time: SCREEN_RESPONSES.APPOINTMENT.data.time.slice(0, 3),
-          },
-        };
+    // Se todos os campos estão preenchidos, finaliza o flow
+    if (hasDept && hasLoc && hasDate && hasTime) {
+      // aqui você pode salvar no seu banco antes de responder SUCCESS
+      // console.log("Saving appointment:", data);
 
-      // handles when user completes DETAILS screen
-      case "DETAILS":
-        // the client payload contains selected ids from dropdown lists, we need to map them to names to display to user
-        const departmentName =
-          SCREEN_RESPONSES.APPOINTMENT.data.department.find(
-            (dept) => dept.id === data.department
-          ).title;
-        const locationName = SCREEN_RESPONSES.APPOINTMENT.data.location.find(
-          (loc) => loc.id === data.location
-        ).title;
-        const dateName = SCREEN_RESPONSES.APPOINTMENT.data.date.find(
-          (date) => date.id === data.date
-        ).title;
-
-        const appointment = `${departmentName} at ${locationName}
-${dateName} at ${data.time}`;
-
-        const details = `Name: ${data.name}
-Email: ${data.email}
-Phone: ${data.phone}
-"${data.more_details}"`;
-
-        return {
-          ...SCREEN_RESPONSES.SUMMARY,
-          data: {
-            appointment,
-            details,
-            // return the same fields sent from client back to submit in the next step
-            ...data,
-          },
-        };
-
-      // handles when user completes SUMMARY screen
-      case "SUMMARY":
-        // TODO: save appointment to your database
-        // send success response to complete and close the flow
-        console.log(data)
-        return {
-          ...SCREEN_RESPONSES.SUCCESS,
-          data: {
-            extension_message_response: {
-              params: {
-                flow_token
-              },
-            },
-          },
-        };
-
-      default:
-        break;
+      return {
+        ...SCREEN_RESPONSES.SUCCESS,
+        data: {
+          extension_message_response: {
+            params: {
+              flow_token,
+              // opcional: ecoa o payload selecionado para uso no seu backend
+              department: data.department,
+              location: data.location,
+              date: data.date,
+              time: data.time
+            }
+          }
+        }
+      };
     }
+
+    // Caso contrário, mantém na mesma tela e habilita os campos progressivamente
+    return {
+      ...SCREEN_RESPONSES.APPOINTMENT,
+      data: {
+        ...SCREEN_RESPONSES.APPOINTMENT.data,
+
+        // habilitação progressiva
+        is_location_enabled: hasDept,
+        is_date_enabled: hasDept && hasLoc,
+        is_time_enabled: hasDept && hasLoc && hasDate,
+
+        // (opcional) "filtra" listas enquanto o usuário seleciona — aqui apenas exemplificamos
+        location: SCREEN_RESPONSES.APPOINTMENT.data.location.slice(0, 4),
+        date: SCREEN_RESPONSES.APPOINTMENT.data.date.slice(0, 3),
+        time: SCREEN_RESPONSES.APPOINTMENT.data.time.slice(0, 5)
+      }
+    };
   }
 
   console.error("Unhandled request body:", decryptedBody);
