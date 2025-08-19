@@ -233,13 +233,15 @@ Phone: ${data.phone}
       case "SUMMARY":
         // TODO: save appointment to your database
         // send success response to complete and close the flow
-        console.log(data)
+        console.log(data);
+        console.log("teste");
         return {
           ...SCREEN_RESPONSES.SUCCESS,
           data: {
             extension_message_response: {
               params: {
                 flow_token,
+                "ola": "aqui",
                 data
               },
             },
