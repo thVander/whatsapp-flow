@@ -40,6 +40,12 @@ MIIE...
 */
 
 app.post("/", async (req, res) => {
+  console.log("Body:", req.body);       // Dados enviados no corpo (ex: JSON)
+  console.log("Query:", req.query);     // Query params (?id=123)
+  console.log("Params:", req.params);   // Parâmetros da rota (/user/:id)
+  console.log("Headers:", req.headers); // Cabeçalhos HTTP
+  console.log("Método:", req.method);   // POST, GET, etc.
+  console.log("URL:", req.url);         // Caminho da requisição completa
   if (!PRIVATE_KEY) {
     throw new Error(
       'Private key is empty. Please check your env variable "PRIVATE_KEY".'
@@ -64,7 +70,7 @@ app.post("/", async (req, res) => {
   }
 
   const { aesKeyBuffer, initialVectorBuffer, decryptedBody } = decryptedRequest;
-  console.log("💬 Decrypted Request:", decryptedBody);
+  //console.log("💬 Decrypted Request:", decryptedBody);
 
   // TODO: Uncomment this block and add your flow token validation logic.
   // If the flow token becomes invalid, return HTTP code 427 to disable the flow and show the message in `error_msg` to the user
@@ -84,18 +90,25 @@ app.post("/", async (req, res) => {
   */
 
   const screenResponse = await getNextScreen(decryptedBody);
-  console.log("👉 Response to Encrypt:", screenResponse);
+  //console.log("👉 Response to Encrypt:", screenResponse);
 
   res.send(encryptResponse(screenResponse, aesKeyBuffer, initialVectorBuffer));
 });
 
 app.get("/", (req, res) => {
+  console.log("Body:", req.body);       // Dados enviados no corpo (ex: JSON)
+  console.log("Query:", req.query);     // Query params (?id=123)
+  console.log("Params:", req.params);   // Parâmetros da rota (/user/:id)
+  console.log("Headers:", req.headers); // Cabeçalhos HTTP
+  console.log("Método:", req.method);   // POST, GET, etc.
+  console.log("URL:", req.url);         // Caminho da requisição completa
    
   res.send(`<pre>Nothing to see here.
 Checkout README.md to start.</pre>`); 
 });
 
 app.listen(PORT, () => {
+  
   //console.log(`Server is listening on port: ${PORT}`);
 });
 
